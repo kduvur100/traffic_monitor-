@@ -1,5 +1,6 @@
 import { Alert, NetworkEvent, TrafficStats } from '@/types';
 import { StatsBar } from '@/components/stats/StatsBar';
+import { TopIpsCard } from '@/components/stats/TopIpsCard';
 import { TrafficChart } from '@/components/charts/TrafficChart';
 import { ProtocolChart } from '@/components/charts/ProtocolChart';
 import { AlertPanel } from '@/components/alerts/AlertPanel';
@@ -19,13 +20,16 @@ export function Dashboard({ events, alerts, stats, onAcknowledge, onDismiss }: D
       {/* Row 1 — stat cards */}
       <StatsBar stats={stats} />
 
-      {/* Row 2 — charts + alerts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      {/* Row 2 — charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
         <div className="lg:col-span-2">
           <TrafficChart events={events} />
         </div>
         <div>
           <ProtocolChart stats={stats} />
+        </div>
+        <div>
+          <TopIpsCard stats={stats} />
         </div>
       </div>
 

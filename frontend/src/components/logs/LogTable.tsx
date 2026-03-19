@@ -3,6 +3,7 @@ import { Search } from 'lucide-react';
 import { NetworkEvent } from '@/types';
 import { StatusBadge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
+import { fmtBytes, fmtTime } from '@/utils/format';
 
 interface LogTableProps {
   events: NetworkEvent[];
@@ -10,15 +11,16 @@ interface LogTableProps {
 
 type SortKey = 'timestamp' | 'srcIp' | 'dstPort' | 'bytesSent' | 'protocol';
 
-function fmtBytes(b: number): string {
-  if (b >= 1_000_000) return `${(b / 1_000_000).toFixed(1)}M`;
-  if (b >= 1_000) return `${(b / 1_000).toFixed(1)}K`;
-  return `${b}`;
-}
-
-function fmtTime(ts: number): string {
-  return new Date(ts).toLocaleTimeString('en-US', { hour12: false });
-}
+const PROTOCOL_COLORS: Record<string, string> = {
+  HTTP:  'text-green-400',
+  HTTPS: 'text-emerald-400',
+  DNS:   'text-sky-400',
+  SSH:   'text-yellow-400',
+  FTP:   'text-orange-400',
+  TCP:   'text-blue-400',
+  UDP:   'text-purple-400',
+  ICMP:  'text-pink-400',
+};
 
 export function LogTable({ events }: LogTableProps) {
   const [search, setSearch] = useState('');
@@ -125,7 +127,9 @@ export function LogTable({ events }: LogTableProps) {
                 <td className="py-1.5 pr-3 text-gray-400 font-mono">{e.dstIp}</td>
                 <td className="py-1.5 pr-3 text-gray-400">{e.dstPort}</td>
                 <td className="py-1.5 pr-3">
-                  <span className="text-accent-blue">{e.protocol}</span>
+                  <span className={`font-medium ${PROTOCOL_COLORS[e.protocol] ?? 'text-gray-400'}`}>
+                    {e.protocol}
+                  </span>
                 </td>
                 <td className="py-1.5 pr-3 text-gray-500">{fmtBytes(e.bytesSent)}</td>
                 <td className="py-1.5">

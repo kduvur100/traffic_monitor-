@@ -1,13 +1,7 @@
 import { Activity, Ban, Flag, HardDrive, Zap } from 'lucide-react';
 import { StatCard } from '@/components/ui/Card';
 import { TrafficStats } from '@/types';
-
-function fmtBytes(b: number): string {
-  if (b >= 1_000_000_000) return `${(b / 1_000_000_000).toFixed(1)} GB`;
-  if (b >= 1_000_000) return `${(b / 1_000_000).toFixed(1)} MB`;
-  if (b >= 1_000) return `${(b / 1_000).toFixed(1)} KB`;
-  return `${b} B`;
-}
+import { fmtBytes } from '@/utils/format';
 
 interface StatsBarProps {
   stats: TrafficStats | null;

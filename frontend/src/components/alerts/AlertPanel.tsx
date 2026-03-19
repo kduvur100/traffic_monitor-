@@ -2,6 +2,7 @@ import { X, CheckCircle } from 'lucide-react';
 import { Alert } from '@/types';
 import { SeverityBadge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
+import { timeAgo } from '@/utils/format';
 
 interface AlertPanelProps {
   alerts: Alert[];
@@ -18,13 +19,6 @@ const typeLabels: Record<Alert['type'], string> = {
   geo_anomaly:      '🌍 Geo Anomaly',
   custom:           '🔧 Custom',
 };
-
-function timeAgo(ts: number): string {
-  const diff = Math.floor((Date.now() - ts) / 1000);
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  return `${Math.floor(diff / 3600)}h ago`;
-}
 
 export function AlertPanel({ alerts, onAcknowledge, onDismiss }: AlertPanelProps) {
   const active = alerts.filter((a) => !a.acknowledged);
