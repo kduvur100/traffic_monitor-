@@ -13,7 +13,7 @@ export default function App() {
   const {
     events, alerts, stats,
     pushEvent, pushAlert, updateStats,
-    acknowledgeAlert, dismissAlert,
+    acknowledgeAlert, dismissAlert, clearAllAlerts,
   } = useEventStore();
 
   const handleMessage = useCallback((msg: WSMessage) => {
@@ -35,6 +35,7 @@ export default function App() {
         stats={stats}
         onAcknowledge={acknowledgeAlert}
         onDismiss={dismissAlert}
+        onClearAll={clearAllAlerts}
       />
     </div>
   );

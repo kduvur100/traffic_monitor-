@@ -42,6 +42,10 @@ export function useEventStore() {
     setAlerts((prev) => prev.filter((a) => a.id !== id));
   }, []);
 
+  const clearAllAlerts = useCallback(() => {
+    setAlerts([]);
+  }, []);
+
   return {
     events,
     alerts,
@@ -51,5 +55,6 @@ export function useEventStore() {
     updateStats,
     acknowledgeAlert,
     dismissAlert,
+    clearAllAlerts,
   };
 }

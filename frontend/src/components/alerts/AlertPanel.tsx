@@ -8,6 +8,7 @@ interface AlertPanelProps {
   alerts: Alert[];
   onAcknowledge: (id: string) => void;
   onDismiss: (id: string) => void;
+  onClearAll: () => void;
 }
 
 const typeLabels: Record<Alert['type'], string> = {
@@ -20,14 +21,24 @@ const typeLabels: Record<Alert['type'], string> = {
   custom:           '🔧 Custom',
 };
 
-export function AlertPanel({ alerts, onAcknowledge, onDismiss }: AlertPanelProps) {
+export function AlertPanel({ alerts, onAcknowledge, onDismiss, onClearAll }: AlertPanelProps) {
   const active = alerts.filter((a) => !a.acknowledged);
 
   return (
     <Card
       title="Active Alerts"
       headerRight={
-        <span className="text-xs text-gray-500">{active.length} unacknowledged</span>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-gray-500">{active.length} unacknowledged</span>
+          {alerts.length > 0 && (
+            <button
+              onClick={onClearAll}
+              className="text-xs text-gray-500 hover:text-red-400 transition-colors"
+            >
+              Clear all
+            </button>
+          )}
+        </div>
       }
     >
       <div className="space-y-2 max-h-80 overflow-y-auto pr-1">

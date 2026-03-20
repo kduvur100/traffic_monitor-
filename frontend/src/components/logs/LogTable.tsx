@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useCallback } from 'react';
 import { Search } from 'lucide-react';
 import { NetworkEvent } from '@/types';
 import { StatusBadge } from '@/components/ui/Badge';
@@ -27,6 +27,14 @@ export function LogTable({ events }: LogTableProps) {
   const [sortKey, setSortKey] = useState<SortKey>('timestamp');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [filter, setFilter] = useState<'all' | 'blocked' | 'flagged'>('all');
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  const handleSearchKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape') {
+      setSearch('');
+      searchRef.current?.blur();
+    }
+  }, []);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
@@ -67,10 +75,12 @@ export function LogTable({ events }: LogTableProps) {
         <div className="relative flex-1 min-w-40">
           <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-500" />
           <input
+            ref={searchRef}
             className="w-full bg-surface border border-surface-border rounded-lg pl-8 pr-3 py-1.5 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-accent-blue"
-            placeholder="Filter by IP, protocol, port…"
+            placeholder="Filter by IP, protocol, port… (Esc to clear)"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
           />
         </div>
         <div className="flex gap-1">

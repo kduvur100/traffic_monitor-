@@ -22,6 +22,11 @@ export const config = {
   // Simulate occasional attack bursts
   attackScenarioChance: 0.08,   // 8 % chance per tick
 
+  // Max events sent to clients in a single WebSocket tick.
+  // Attack bursts can produce 40+ events at once — this prevents
+  // flooding slow clients while still delivering all events.
+  maxEventsPerBroadcast: 20,
+
   cors: {
     origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   },

@@ -28,8 +28,10 @@ const detector = new AnomalyDetector();
 simulator.onEvents((events) => {
   store.addEvents(events);
 
-  // Broadcast each event to connected clients
-  for (const event of events) {
+  // Cap how many events we broadcast per tick so attack bursts (40+ events)
+  // don't flood slow clients. All events are still stored and detected.
+  const toSend = events.slice(0, config.maxEventsPerBroadcast);
+  for (const event of toSend) {
     broadcast('event', event);
   }
 

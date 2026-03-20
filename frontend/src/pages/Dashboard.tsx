@@ -1,6 +1,7 @@
 import { Alert, NetworkEvent, TrafficStats } from '@/types';
 import { StatsBar } from '@/components/stats/StatsBar';
 import { TopIpsCard } from '@/components/stats/TopIpsCard';
+import { TopPortsCard } from '@/components/stats/TopPortsCard';
 import { TrafficChart } from '@/components/charts/TrafficChart';
 import { ProtocolChart } from '@/components/charts/ProtocolChart';
 import { AlertPanel } from '@/components/alerts/AlertPanel';
@@ -12,16 +13,17 @@ interface DashboardProps {
   stats: TrafficStats | null;
   onAcknowledge: (id: string) => void;
   onDismiss: (id: string) => void;
+  onClearAll: () => void;
 }
 
-export function Dashboard({ events, alerts, stats, onAcknowledge, onDismiss }: DashboardProps) {
+export function Dashboard({ events, alerts, stats, onAcknowledge, onDismiss, onClearAll }: DashboardProps) {
   return (
     <main className="max-w-screen-2xl mx-auto px-4 py-6 space-y-5">
       {/* Row 1 — stat cards */}
       <StatsBar stats={stats} />
 
-      {/* Row 2 — charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
+      {/* Row 2 — charts + top lists */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
         <div className="lg:col-span-2">
           <TrafficChart events={events} />
         </div>
@@ -30,6 +32,9 @@ export function Dashboard({ events, alerts, stats, onAcknowledge, onDismiss }: D
         </div>
         <div>
           <TopIpsCard stats={stats} />
+        </div>
+        <div>
+          <TopPortsCard stats={stats} />
         </div>
       </div>
 
@@ -40,6 +45,7 @@ export function Dashboard({ events, alerts, stats, onAcknowledge, onDismiss }: D
             alerts={alerts}
             onAcknowledge={onAcknowledge}
             onDismiss={onDismiss}
+            onClearAll={onClearAll}
           />
         </div>
         <div className="xl:col-span-3">
