@@ -18,3 +18,10 @@ export function timeAgo(ts: number): string {
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
   return `${Math.floor(diff / 3600)}h ago`;
 }
+
+/** Format a duration in milliseconds to a compact string (e.g. "1.2s", "340ms") */
+export function fmtDuration(ms: number): string {
+  if (ms >= 60_000) return `${(ms / 60_000).toFixed(1)}m`;
+  if (ms >= 1_000)  return `${(ms / 1_000).toFixed(1)}s`;
+  return `${ms}ms`;
+}

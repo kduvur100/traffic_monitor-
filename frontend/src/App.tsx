@@ -28,7 +28,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-surface">
-      <Header status={status} alertCount={unacknowledged} />
+      <Header status={status} alertCount={unacknowledged} eventsPerSecond={stats?.eventsPerSecond} />
       <Dashboard
         events={events}
         alerts={alerts}

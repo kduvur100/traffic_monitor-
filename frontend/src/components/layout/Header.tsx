@@ -3,6 +3,7 @@ import { Shield, Wifi, WifiOff } from 'lucide-react';
 interface HeaderProps {
   status: 'connecting' | 'connected' | 'disconnected' | 'error';
   alertCount: number;
+  eventsPerSecond?: number;
 }
 
 const statusConfig = {
@@ -12,7 +13,7 @@ const statusConfig = {
   error:        { label: 'Error',        dot: 'bg-red-600 animate-pulse' },
 };
 
-export function Header({ status, alertCount }: HeaderProps) {
+export function Header({ status, alertCount, eventsPerSecond }: HeaderProps) {
   const { label, dot } = statusConfig[status];
   const isLive = status === 'connected';
 
@@ -29,6 +30,13 @@ export function Header({ status, alertCount }: HeaderProps) {
 
         {/* Status + alerts */}
         <div className="flex items-center gap-4">
+          {eventsPerSecond !== undefined && eventsPerSecond > 0 && (
+            <span className="hidden sm:flex items-center gap-1.5 text-xs text-gray-500 tabular-nums">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent-blue inline-block" />
+              {eventsPerSecond} evt/s
+            </span>
+          )}
+
           {alertCount > 0 && (
             <span className="flex items-center gap-1.5 text-xs text-red-400">
               <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse inline-block" />

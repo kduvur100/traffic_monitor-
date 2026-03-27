@@ -19,8 +19,8 @@ export const config = {
   // Maximum alerts kept in memory
   maxStoredAlerts: 500,
 
-  // Simulate occasional attack bursts
-  attackScenarioChance: 0.08,   // 8 % chance per tick
+  // Simulate occasional attack bursts (override with ATTACK_CHANCE=0.25 for heavy testing)
+  attackScenarioChance: Number(process.env.ATTACK_CHANCE) || 0.08,
 
   // Max events sent to clients in a single WebSocket tick.
   // Attack bursts can produce 40+ events at once — this prevents

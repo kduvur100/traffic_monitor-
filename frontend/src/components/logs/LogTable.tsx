@@ -3,13 +3,25 @@ import { Search } from 'lucide-react';
 import { NetworkEvent } from '@/types';
 import { StatusBadge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
-import { fmtBytes, fmtTime } from '@/utils/format';
+import { fmtBytes, fmtTime, fmtDuration } from '@/utils/format';
 
 interface LogTableProps {
   events: NetworkEvent[];
 }
 
 type SortKey = 'timestamp' | 'srcIp' | 'dstPort' | 'bytesSent' | 'protocol';
+
+// Tag color map — add new tags here as the simulator grows
+const TAG_COLORS: Record<string, string> = {
+  inbound:        'bg-blue-900/50 text-blue-400',
+  outbound:       'bg-purple-900/50 text-purple-400',
+  scan:           'bg-red-900/50 text-red-400',
+  flood:          'bg-red-900/60 text-red-300',
+  auth:           'bg-yellow-900/50 text-yellow-400',
+  'large-transfer': 'bg-orange-900/50 text-orange-400',
+  encrypted:      'bg-green-900/50 text-green-400',
+  internal:       'bg-gray-800 text-gray-400',
+};
 
 const PROTOCOL_COLORS: Record<string, string> = {
   HTTP:  'text-green-400',
@@ -121,19 +133,34 @@ export function LogTable({ events }: LogTableProps) {
               <th className="text-left pb-2 pr-3 cursor-pointer hover:text-gray-300" onClick={() => toggleSort('bytesSent')}>
                 Sent <SortIcon k="bytesSent" />
               </th>
+              <th className="text-left pb-2 pr-3 text-gray-500">Dur</th>
               <th className="text-left pb-2">Status</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-surface-border/50">
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="py-8 text-center text-gray-600">No events match</td>
+                <td colSpan={8} className="py-8 text-center text-gray-600">No events match</td>
               </tr>
             )}
             {filtered.map((e) => (
               <tr key={e.id} className="hover:bg-white/5 transition-colors">
                 <td className="py-1.5 pr-3 text-gray-500 font-mono whitespace-nowrap">{fmtTime(e.timestamp)}</td>
-                <td className="py-1.5 pr-3 text-gray-300 font-mono">{e.srcIp}</td>
+                <td className="py-1.5 pr-3">
+                  <span className="text-gray-300 font-mono">{e.srcIp}</span>
+                  {e.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-0.5">
+                      {e.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className={`px-1 py-px rounded text-[10px] font-medium ${TAG_COLORS[tag] ?? 'bg-gray-800 text-gray-500'}`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </td>
                 <td className="py-1.5 pr-3 text-gray-400 font-mono">{e.dstIp}</td>
                 <td className="py-1.5 pr-3 text-gray-400">{e.dstPort}</td>
                 <td className="py-1.5 pr-3">
@@ -142,6 +169,7 @@ export function LogTable({ events }: LogTableProps) {
                   </span>
                 </td>
                 <td className="py-1.5 pr-3 text-gray-500">{fmtBytes(e.bytesSent)}</td>
+                <td className="py-1.5 pr-3 text-gray-600 tabular-nums">{fmtDuration(e.durationMs)}</td>
                 <td className="py-1.5">
                   <StatusBadge status={e.status} />
                 </td>
